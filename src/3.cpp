@@ -1,30 +1,34 @@
-#include <iostream>
 #include <string>
+#include <unordered_set>
 #include <cassert>
-using namespace std;
+#include <algorithm>
 
-class Solution
-{
+class Solution {
 public:
-    int lengthOfLongestSubstring(string s)
-    {
-        int i = 0, ans = 0;
-        int n = s.length();
-        int index[128] = {};
-        for (int j = 0; j < n; j++)
-        {
-            i = max(index[s[j]], i);
-            ans = max(j - i + 1, ans);
-            index[s[j]] = j + 1;
+    int lengthOfLongestSubstring(std::string s) {
+        int max_length = 0;
+        std::unordered_set<char> set;
+        for (int i = 0, j = 0; j < s.size(); ++j) {
+            if (set.find(s[j]) == set.end()) {
+                set.insert(s[j]);
+                max_length = std::max(max_length, j - i + 1);
+            }
+            else {
+                while (set.find(s[j]) != set.end()) {
+                    set.erase(s[i++]);
+                }
+                set.insert(s[j]);
+            }
         }
-        return ans;
+        return max_length;
     }
 };
 
-int main()
-{
+int main() {
     Solution s;
-    assert(s.lengthOfLongestSubstring("abcabcbb") == 3);
     assert(s.lengthOfLongestSubstring("bbbbb") == 1);
+    assert(s.lengthOfLongestSubstring("abcabcbb") == 3);
     assert(s.lengthOfLongestSubstring("pwwkew") == 3);
+    return 0;
 }
+
