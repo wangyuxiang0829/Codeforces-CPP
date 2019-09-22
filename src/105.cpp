@@ -12,7 +12,7 @@ struct TreeNode {
 class Solution {
 private:
     void buildRoot(const std::vector<int> &preorder, const std::vector<int> &inorder, TreeNode *&root) {
-        if (!preorder.size()) return;
+        if (preorder.empty()) return;
         root = new TreeNode(preorder.front());
         for (int i = 0; i < inorder.size(); ++i) {
             if (inorder[i] == preorder.front()) {
@@ -42,7 +42,7 @@ void traversing(TreeNode *root, unsigned level) {
 
 int main() {
     Solution s;
-    traversing(s.buildTree(std::vector<int>({3, 9, 20, 15, 7}), std::vector<int>({9, 3, 15, 20, 7})), 0);
+    traversing(s.buildTree(std::vector<int>{3, 9, 20, 15, 7}, std::vector<int>{9, 3, 15, 20, 7}), 0);
     return 0;
 }
 
