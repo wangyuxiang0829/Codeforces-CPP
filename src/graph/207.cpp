@@ -1,32 +1,31 @@
 #include <vector>
-#include <unordered_set>
+#include <iostream>
 
+using namespace std;
 class Solution {
-    std::unordered_set<int> unfinished;
-    std::unordered_set<int> searched;
-private:
-    bool dfs(int i, std::vector<std::vector<int>> &prerequisites) {
-        searched.insert(i);
-        unfinished.insert(i);
-        for (auto &edge : prerequisites) {
-            if (edge[0] == i) {
-                if (unfinished.find(edge[1]) != unfinished.end()) return false;
-                if (searched.find(edge[1]) == searched.end())
-                    if (!dfs(edge[1], prerequisites)) return false;
-            }
-        }
-        unfinished.erase(i);
+public:
+    bool canFinish(int numCourses, const vector<vector<int>> &prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        for (auto &edge : prerequisites)
+            graph[edge[1]].push_back(edge[0]);
+        vector<int> flag(numCourses, 0);
+        for (int i = 0; i < numCourses; ++i)
+            if (flag[i] == 0)
+                if (!dfs(i, graph, flag)) return false;
         return true;
     }
-
-public:
-    bool canFinish(int numCourses, std::vector<std::vector<int>> &prerequisites) {
-        for (int i = 0; i < numCourses; ++i) {
-            if (searched.find(i) == searched.end()) {
-                if (!dfs(i, prerequisites)) return false;
-            }
+private:
+    bool dfs(int u, const vector<vector<int>> &graph, vector<int> &flag) {
+        flag[u] = 1;
+        for (auto v : graph[u]) {
+            if (flag[v] == 1) return false;
+            if (flag[v] == 0 && !dfs(v, graph, flag)) return false;
         }
+        flag[u] = -1;
         return true;
     }
 };
 
+int main() {
+    cout << Solution().canFinish(2, {{1, 0}, {0, 1}}) << endl;
+}
