@@ -8,7 +8,8 @@ public:
         int m = grid.size(), n = grid[0].size();
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                dfs(grid, m, n, i, j);
+                if (grid[i][j])
+                    dfs(grid, m, n, i, j);
             }
         }
         return ans;
