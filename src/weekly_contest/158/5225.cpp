@@ -6,14 +6,12 @@ using namespace std;
 class Solution {
 public:
     int maxEqualFreq(vector<int> &nums) {
-        unordered_map<int, int> count;
-        unordered_map<int, int> frequ;
         int ans = 0;
+        unordered_map<int, int> count, frequ;
         for (auto iter = nums.begin(); iter != nums.end(); ++iter) {
             auto times = ++count[*iter];
-            if (times != 1)
-                if (--frequ[times - 1] == 0)
-                    frequ.erase(times - 1);
+            if (times != 1 && --frequ[times - 1] == 0)
+                frequ.erase(times - 1);
             frequ[times]++;
             if (frequ.size() == 1) {
                 auto p = frequ.begin();
