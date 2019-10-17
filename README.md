@@ -21,7 +21,7 @@
 
 2. binary heap
 
-![binary heap](./images/Max_heap.png)
+![binary heap](./images/Max_Heap.png)
 
 3. binary search tree
 
