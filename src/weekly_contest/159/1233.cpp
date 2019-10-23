@@ -2,38 +2,22 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include <unordered_set>
 using namespace std;
 class Solution {
 public:
     vector<string> removeSubfolders(vector<string> &folder) {
-        sort(folder.begin(), folder.end(), [](const string &s1, const string &s2) { return s1.size() < s2.size(); });
-        unordered_set<string> not_sub;
+        sort(folder.begin(), folder.end());
+        vector<string> result;
         for (const auto &s : folder) {
-            auto iter = find(s.cbegin() + 1, s.cend(), '/');
-            bool flag = true;
-            while(iter != s.cend()) {
-                string c(s.cbegin(), iter);
-                if (not_sub.find(c) != not_sub.end()) {
-                    flag = false;
-                    break;
-                }
-                iter = find(iter + 1, s.end(), '/');
-            }
-            if (flag) not_sub.insert(s);
+            if (result.empty() || s.find(result.back() + '/') != 0)
+                result.push_back(s);
         }
-        return vector<string>(not_sub.begin(), not_sub.end());
+        return result;
     }
 };
 
 int main() {
-    vector<string> folder = {
-        "/a",
-        "/a/b",
-        "/c/d",
-        "/c/d/e",
-        "/c/f"
-    };
+    vector<string> folder = {"/c/f", "/a/b", "/c/d", "/c/d/e", "/a"};
     for (auto s : Solution().removeSubfolders(folder))
         cout << s << endl;
 }
