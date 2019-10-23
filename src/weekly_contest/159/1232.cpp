@@ -4,16 +4,12 @@ using namespace std;
 class Solution {
 public:
     bool checkStraightLine(vector<vector<int>> &coordinates) {
-        if (coordinates[0][0] == coordinates[1][0]) {
-            for (int i = 2; i < coordinates.size(); ++i) {
-                if (coordinates[i][0] != coordinates[0][0]) return false;
-            }
-        }
-        auto k = ((double)coordinates[0][1] - coordinates[1][1]) / (coordinates[0][0] - coordinates[1][0]);
+        const auto dx = coordinates[0][0] - coordinates[1][0];
+        const auto dy = coordinates[0][1] - coordinates[1][1];
         for (int i = 2; i < coordinates.size(); ++i) {
-            const auto &cur = coordinates[i];
-            const auto &pre = coordinates[i - 1];
-            if (pre[0] == cur[0] || ((double)pre[1] - cur[1]) / (pre[0] - cur[0]) != k) return false;
+            auto dix = coordinates[0][0] - coordinates[i][0];
+            auto diy = coordinates[0][1] - coordinates[i][1];
+            if (dx * diy != dy * dix) return false;
         }
         return true;
     }
