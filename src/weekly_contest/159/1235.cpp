@@ -1,39 +1,31 @@
+#include <tuple>
 #include <vector>
-#include <utility>
-#include <iostream>
+#include <cassert>
 #include <algorithm>
-#include <unordered_map>
 using namespace std;
 class Solution {
 public:
+    using job = tuple<int, int, int>;
     int jobScheduling(vector<int> &startTime, vector<int> &endTime, vector<int> &profit) {
-        int N = 0;
-        unordered_multimap<int, pair<int, int>> jobs;
-        for (int i = 0; i < startTime.size(); ++i) {
-            N = max({N, startTime[i], endTime[i]});
-            jobs.emplace(make_pair(endTime[i], make_pair(startTime[i], profit[i])));
+        vector<job> jobs;
+        for (int i = 0; i < startTime.size(); ++i) jobs.emplace_back(startTime[i], endTime[i], profit[i]);
+        sort(endTime.begin(), endTime.end());
+        endTime.resize(unique(endTime.begin(), endTime.end()) - endTime.begin());
+        sort(jobs.begin(), jobs.end(), [](const job &j1, const job &j2) { return get<1>(j1) < get<1>(j2); });
+        vector<int> dp(endTime.size() + 1, 0);
+        for (auto j : jobs) {
+            int start = get<0>(j), end = get<1>(j);
+            start     = upper_bound(endTime.begin(), endTime.end(), start) - endTime.begin();
+            end       = lower_bound(endTime.begin(), endTime.end(), end) - endTime.begin() + 1;
+            dp[end]   = max({dp[end], dp[end - 1], dp[start] + get<2>(j)});
         }
-        vector<int> dp(N);
-        for (int i = 1; i < N; ++i) {
-            auto range = jobs.equal_range(i + 1);
-            if (range.first == jobs.end())
-                dp[i] = dp[i - 1];
-            else {
-                int max = 0;
-                for (auto iter = range.first; iter != range.second; ++iter) {
-                    if (auto v = dp[iter->second.first - 1] + iter->second.second; max < v)
-                        max = v;
-                }
-                dp[i] = dp[i - 1] > max ? dp[i - 1] : max;
-            }
-        }
-        return dp[N - 1];
+        return dp.back();
     }
 };
 
 int main() {
-    vector<int> start  = {1, 2, 3, 4, 6};
-    vector<int> end    = {3, 5, 10, 6, 9};
-    vector<int> profit = {20, 20, 100, 70, 60};
-    cout << Solution().jobScheduling(start, end, profit) << endl;
+    vector<int> s = {1, 2, 3, 4, 6};
+    vector<int> e = {3, 5, 10, 6, 9};
+    vector<int> p = {20, 20, 100, 70, 60};
+    assert(Solution().jobScheduling(s, e, p) == 150);
 }
