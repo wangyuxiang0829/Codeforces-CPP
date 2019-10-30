@@ -11,18 +11,7 @@ public:
         return res;
     }
 private:
-    const string map[10] = {
-        "",
-        "",
-        "abc",
-        "def",
-        "ghi",
-        "jkl",
-        "mno",
-        "pqrs",
-        "tuv",
-        "wxyz"
-    };
+    static const string map[10];
     vector<string> res;
 
     void backtrack(string com, int i, const string &digits) {
@@ -36,6 +25,19 @@ private:
             com.pop_back();
         }
     }
+};
+
+const string Solution::map[10] = {
+        "",
+        "",
+        "abc",
+        "def",
+        "ghi",
+        "jkl",
+        "mno",
+        "pqrs",
+        "tuv",
+        "wxyz"
 };
 
 ostream &operator<<(ostream &os, const vector<string> &vs) {
