@@ -15,7 +15,6 @@ public:
         }
         for (int i = n - 2; i >= 0; i--) {
             r[i] = max(r[i + 1] + arr[i], arr[i]);
-            result = max(result, r[i]);
         }
         for (int i = 1; i < n - 1; i++)
             result = max(result, l[i - 1] + r[i + 1]);
