@@ -1,8 +1,8 @@
-#include <set>
 #include <deque>
 #include <vector>
 #include <utility>
 #include <cassert>
+#include <unordered_set>
 
 #define legal(i, j) (i >= 0 && i < n && j >= 0 && j < m && grid[i][j] != '#')
 
@@ -13,9 +13,13 @@ using vertex   = pair<position, position>;
 using state    = pair<vertex, int>;
 
 namespace std {
-    template <> struct less<state> {
-        constexpr bool operator()(const state &lhs, const state &rhs) const {
-            return lhs.first < rhs.first;
+    constexpr int operator+(const position &p1, const position &p2) {
+        return (p1.first * 20 + p1.second) * (p2.first * 20 + p2.second);
+    }
+
+    template <> struct hash<vertex> {
+        constexpr std::size_t operator()(const vertex &v) const noexcept {
+            return v.first + v.second;
         }
     };
 }
@@ -23,7 +27,7 @@ namespace std {
 class Solution {
 public:
     int minPushBox(vector<vector<char>> &grid) {
-        set<state> s; // stores all the state that we have searched
+        unordered_set<vertex> s; // stores all the state that we have searched
         deque<state> q(1); // a double-ended queue used for managing the bfs
         int n = grid.size(), m = grid[0].size();
         position target;
@@ -40,11 +44,11 @@ public:
         }
         // start the breadth first search
         while (!q.empty()) {
-            s.insert(q.front());
             auto [u, value] = q.front();
             // if the box's position is equal to the target, then we get the result
             if (u.second == target)
                 return value;
+            s.insert(u);
             q.pop_front();
             // for all possible adjacent state
             for (int k = 0; k < 4; k++) {
@@ -56,14 +60,14 @@ public:
                         int _j = j + dir[k][1];
                         if (legal(_i, _j)) {
                             state new_state = {{{i, j}, {_i, _j}}, value + 1};
-                            if (s.find(new_state) == s.end()) {
+                            if (s.find(new_state.first) == s.end()) {
                                 q.push_back(new_state);
                             }
                         }
                     }
                     else {
                         state new_state = {{{i, j}, {u.second.first, u.second.second}}, value};
-                        if (s.find(new_state) == s.end()) {
+                        if (s.find(new_state.first) == s.end()) {
                             q.push_front(new_state);
                         }
                     }
@@ -91,4 +95,3 @@ int main() {
     };
     assert(Solution().minPushBox(grid) == 3);
 }
-
