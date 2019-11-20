@@ -13,6 +13,14 @@ using vertex   = pair<position, position>;
 using state    = pair<vertex, int>;
 
 namespace std {
+    /*
+     * bad hash function and will lead to time limited exceed
+     * constexpr int operator+(const position &p1, const position &p2) {
+     *     return p1.first + p1.second + p2.first + p2.second;
+     * }
+     */
+    
+    // the following is a perfect hash function and time used is less than the previous
     constexpr int operator+(const position &p1, const position &p2) {
         return (p1.first * 20 + p1.second) * (p2.first * 20 + p2.second);
     }
