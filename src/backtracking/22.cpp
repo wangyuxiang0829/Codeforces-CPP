@@ -12,15 +12,12 @@ private:
     vector<string> result;
 
     void backtracking(int n, int m, string s) {
-        if (n == 0 && m == 0)
+        if (n == 0 && m == 0) {
             result.push_back(s);
-        else if (n == 0)
-            backtracking(0, m - 1, string(s).append(1, ')'));
-        else {
-            backtracking(n - 1, m, string(s).append(1, '('));
-            if (n == m) return;
-            backtracking(n, m - 1, s.append(1, ')'));
+            return;
         }
+        if (n > 0) backtracking(n - 1, m, s + '(');
+        if (n < m) backtracking(n, m - 1, s + ')');
     }
 };
 
