@@ -7,59 +7,43 @@ class Solution {
 public:
     using grid = vector<vector<char>>;
     bool exist(grid &board, string word) {
-        if (board.empty()) return false;
-        int n = board.size(), m = board[0].size();
-        vector<pair<int, int>> all;
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < m; j++)
-                if (board[i][j] == word[0])
-                    all.push_back({i, j});
-        if (all.empty()) return false;
-        for (auto p : all) {
-            int i = p.first, j = p.second;
-            board[i][j] = '\0';
-            if (backtrack(board, word, i, j, 1)) {
-                board[i][j] = word[0];
-                return true;
-            }
-            board[i][j] = word[0];
-        }
+        for (int i = 0; i < board.size(); i++)
+            for (int j = 0; j < board[0].size(); j++)
+                if (backtracking(board, word, i, j, 0))
+                    return true;
         return false;
     }
 private:
-    bool backtrack(grid &g, const string &word, int i, int j, int c) {
-        if (c == word.size()) return true;
-        int n = g.size(), m = g[0].size();
-        for (int d = 0; d < 4; d++) {
-            int _i = i + dir[d][0];
-            int _j = j + dir[d][1];
-            if (legal(_i, _j) && g[_i][_j] == word[c]) {
-                g[_i][_j] = '\0';
-                if (backtrack(g, word, _i, _j, c + 1)) {
-                    g[_i][_j] = word[c];
-                    return true;
-                }
-                g[_i][_j] = word[c];
-            }
-        }
-        return false;
-    }
     static constexpr int dir[4][2] = {
         {0, 1}, {0, -1},
         {1, 0}, {-1, 0}
     };
+
+    bool backtracking(grid &g, const string &word, int i, int j, int c) {
+        int n = g.size(), m = g[0].size();
+        if (!legal(i, j) || g[i][j] != word[c]) return false;
+        if (c == word.size() - 1) return true;
+        g[i][j] = '\0';
+        for (int d = 0; d < 4; d++)
+            if (backtracking(g, word, i + dir[d][0], j + dir[d][1], c + 1))
+                return true;
+        g[i][j] = word[c];
+        return false;
+    }
 };
+
 int main() {
     vector<vector<char>> board = {
         {'A', 'B', 'C', 'E'},
         {'S', 'F', 'C', 'S'},
         {'A', 'D', 'E', 'E'},
     };
+    auto board0(board), board1(board), board2(board);
 
-    vector<vector<char>> b = {{'a', 'a'}};
+    vector<vector<char>> board3 = {{'a', 'a'}};
 
-    assert(Solution().exist(board, "ABCCED") == true);
-    assert(Solution().exist(board, "SEE") == true);
-    assert(Solution().exist(board, "ABAB") == false);
-    assert(Solution().exist(b, "aaa") == false);
+    assert(Solution().exist(board0, "ABCCED") == true);
+    assert(Solution().exist(board1, "SEE") == true);
+    assert(Solution().exist(board2, "ABAB") == false);
+    assert(Solution().exist(board3, "aaa") == false);
 }
