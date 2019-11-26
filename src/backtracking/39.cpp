@@ -1,33 +1,31 @@
-#include <set>
 #include <vector>
-#include <utility>
 #include <iostream>
 #include <algorithm>
 using namespace std;
 class Solution {
 public:
     vector<vector<int>> combinationSum(vector<int> &candinates, int target) {
-        backtracking(candinates, target, vector<int>(), 0);
-        return vector<vector<int>>(result.begin(), result.end());
+        sort(candinates.begin(), candinates.end());
+        backtracking(candinates, 0, target, 0);
+        return result;
     }
 private:
-    set<vector<int>> result;
+    vector<int> path;
+    vector<vector<int>> result;
 
-    void backtracking(const vector<int> &candinates, const int target, vector<int> path, const int curSum) {
-        if (curSum == target) {
-            sort(path.begin(), path.end());
-            result.insert(path);
-        }
+    void backtracking(const vector<int> &candinates, const int i, const int target, const int curSum) {
+        if (curSum == target) result.push_back(path);
         else if (curSum > target) return;
         else {
-            for (auto i : candinates) {
-                path.push_back(i);
-                backtracking(candinates, target, path, curSum + i);
+            for (int j = i; j < candinates.size(); j++) {
+                path.push_back(candinates[j]);
+                backtracking(candinates, j, target, curSum + candinates[j]);
                 path.pop_back();
             }
         }
     }
 };
+
 int main() {
     vector<int> candinates = {2, 3, 5};
     for (auto i : Solution().combinationSum(candinates, 8)) {
