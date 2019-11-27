@@ -11,23 +11,23 @@ public:
         for (int i = 2; i <= n; i += 2)
             dp[i][0] = (p[i - 1] == '*' && dp[i - 2][0]);
         for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) {
-                char c = p[i - 1];
-                if (c == '*') {
-                    if (dp[i - 1][j] || dp[i - 2][j]) {
-                        dp[i][j] = 1;
-                        continue;
+            char c = p[i - 1];
+            switch (c) {
+                case '*':
+                    for (int j = 1; j <= m; j++) {
+                        if (p[i - 2] == s[j - 1] || p[i - 2] == '.')
+                            dp[i][j] = dp[i][j - 1] || dp[i - 1][j] || dp[i - 2][j];
+                        else
+                            dp[i][j] = dp[i - 2][j];
                     }
-                    for (int k = j; k > 0 && (s[k - 1] == p[i - 2] || p[i - 2] == '.'); k--)
-                        if (dp[i - 2][k - 1]) {
-                            dp[i][j] = 1;
-                            break;
-                        }
-                }
-                else if (c == '.')
-                    dp[i][j] = dp[i - 1][j - 1];
-                else
-                    dp[i][j] = (c == s[j - 1] && dp[i - 1][j - 1]);
+                    break;
+                case '.':
+                    for (int j = 1; j <= m; j++)
+                        dp[i][j] = dp[i - 1][j - 1];
+                    break;
+                default:
+                    for (int j = 1; j <= m; j++)
+                        dp[i][j] = (c == s[j - 1] && dp[i - 1][j - 1]);
             }
         }
         return dp[n][m];
