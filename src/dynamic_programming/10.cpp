@@ -16,7 +16,7 @@ public:
                 case '*':
                     for (int j = 1; j <= m; j++) {
                         if (p[i - 2] == s[j - 1] || p[i - 2] == '.')
-                            dp[i][j] = dp[i][j - 1] || dp[i - 1][j] || dp[i - 2][j];
+                            dp[i][j] = dp[i][j - 1] || dp[i - 2][j];
                         else
                             dp[i][j] = dp[i - 2][j];
                     }
