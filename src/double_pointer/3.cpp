@@ -1,7 +1,7 @@
 #include <string>
 #include <bitset>
 #include <cassert>
-#include <algorithm>
+#define max(i, j) (i > j ? i : j)
 using namespace std;
 class Solution {
 public:
