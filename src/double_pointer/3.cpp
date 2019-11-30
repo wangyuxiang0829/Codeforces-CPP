@@ -9,13 +9,8 @@ public:
         bitset<256> exist_char;
         int max_length = 0;
         for (int i = 0, j = 0; j < s.size(); j++) {
-            if (exist_char.test(s[j])) {
-                while (s[i] != s[j]) {
-                    exist_char.reset(s[i]);
-                    i++;
-                }
+            while(exist_char[s[j]])
                 exist_char.reset(s[i++]);
-            }
             max_length = max(j - i + 1, max_length);
             exist_char.set(s[j]);
         }
